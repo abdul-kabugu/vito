@@ -25,18 +25,8 @@ export function MyProfile() {
   if (myProfiles.length === 0) {
     return (
       <div>
-        <h2 className={styles.heading}>{myProfiles.length > 1 ? "My Profiles" : "My Profile"}</h2>
-        <div>
-          <button
-            className={`${styles.button}`}
-            onClick={() => router.push('/createProfile')}
-          >
-            {'Create Profile'}
-          </button>
-        </div>
-        <div>
-          No profiles found. You can create one using the button above.
-        </div>
+     
+       <button>create profile</button>
       </div>
     );
   }
@@ -50,16 +40,19 @@ export function MyProfile() {
       followers: myProfile.followers || 0,
     };
 
+      console.log("the profile data", profileData)
+
     return (
-      <div key={index} style={{ paddingBottom: '20px' }}>
-        <ProfileComponent data={profileData} />
+      <div key={index} className='w-9 bg-gray-700 h-9 rounded-full  flex items-center justify-center'>
+        <img src={profileData?.avatar} className='w-8 h-8 rounded-full' />
+        
       </div>
     );
   });
 
   return (
     <div>
-      <h2 className={styles.heading}>{myProfiles.length > 1 ? "My Profiles" : "My Profile"}</h2>
+   
       {profileComponents}
     </div>
   );

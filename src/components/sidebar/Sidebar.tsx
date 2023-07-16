@@ -9,12 +9,12 @@ export default function Sidebar({isExpanded}) {
     <div
       className={`${
         isExpanded ? "w-[105px] " : "w-[60px] "
-      }  border-r-1 h-screen fixed top-15  duration-500 ease-in-out xs:hidden md:block `}
+      }  border-r-1 h-screen fixed top-15  duration-500 ease-in-out xs:hidden md:block bg-black/90 `}
     >
       <div>
         {sidebarMenu.map((item, i) => {
           return (
-            <Link href={item.to} key={i}>
+            <Link href={item.to} key={i} className="text-gray-300">
               <div
                 className={`${
                   isExpanded

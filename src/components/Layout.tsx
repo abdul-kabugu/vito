@@ -21,8 +21,8 @@ export default function Layout({ children }: Tlayout) {
   // LIVEPEER THEME
   const livepeerTheme: ThemeConfig = {
     colors: {
-      accent: "#3730a3",
-      containerBorderColor: "#3730a3",
+      accent: "#c73b91",
+      containerBorderColor: "#c73b91",
     },
     fonts: {
       display: "Inter",
@@ -38,7 +38,7 @@ export default function Layout({ children }: Tlayout) {
     
         <LivepeerConfig client={client} theme={livepeerTheme}>
           <TopNav isExpanded={isSidebarExpanded} />
-          <main className="flex ">
+          <main className="flex">
             <section
               className={`${
                 isSidebarExpanded ? "md:ml-[120px]" : "md:ml-[70px]"

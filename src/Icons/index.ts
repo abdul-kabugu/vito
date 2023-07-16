@@ -28,8 +28,14 @@ import MoonOutline from "./MoonOutline";
 import BulbOutline from "./BulbOutline";
 import AppLogo from "./AppLogo";
 import MenuBold from "./MenuBold";
+import LikeAlt from "./LikeAlt";
+import DislikeAlt from "./DeslikeAlt";
+import AmplifyAlt from "./AmplifyAlt";
 BulbOutline;
 export {
+  LikeAlt,
+  DislikeAlt,
+  AmplifyAlt,
   AppLogo,
   Verified,
   UploadOutline,

@@ -2,14 +2,13 @@
 //@ts-nocheck
 
 import { useRef, useState, useEffect } from "react";
-import { Contract } from "crossbell.js";
 import { AddImageOutline } from "@/Icons";
 import {
   generateVideoThumbnailViaUrl,
   generateVideoThumbnails,
   importFileandPreview,
 } from "@rajesh896/video-thumbnails-generator";
-
+import { useInitializeProfile } from "@/hooks/useInitializeProfile";
 import { AiOutlineClose } from "react-icons/ai";
 import { LIVEPEER_KEY } from "../constants";
 import { usePostVideo } from "../../hooks/usePostVideo";
@@ -17,12 +16,40 @@ import { usePinToIpfs } from "@/hooks/usePinToIpfs";
 import { useCreateAsset } from "@livepeer/react";
 import { ClipLoader } from "react-spinners";
 import { ThumbnailsLoadingSpinner } from "../spinners";
+import { useCreatePost, useGumContext, useSessionWallet, useUploaderContext, GPLCORE_PROGRAMS, useReaction, } from "@gumhq/react-sdk";
+
+import { getPostsWithReaction, getProfileAccount, refreshSession } from "@/utils";
 import { toast } from "react-toastify";
-console.log("the live peer key", LIVEPEER_KEY);
+import { PublicKey } from "@solana/web3.js";
+
+
+export type PostData = {
+  content: {
+    content: JSON;
+    format: string;
+  };
+  type: string;
+  authorship: {
+    signature: string;
+    publicKey: string;
+  };
+  app_id: string;
+  metadataUri: string;
+  transactionUrl: string;
+  reaction: string[];
+  address: string;
+};
 export default function VideoMetadata({ videoFile, setVideoFile }) {
   const [videoTitle, setvideoTitle] = useState("");
   const [caption, setcaption] = useState("");
   const [videoTags, setVideoTags] = useState([]);
+  const { handleUpload, uploading :isUploadingMetadata, error: uploadingMetadatError} = useUploaderContext();
+  const { sdk } = useGumContext();
+  const profile = useInitializeProfile();
+  const { createWithSession, postPDA, createPostError } = useCreatePost(sdk);
+  const cluster = (process.env.NEXT_PUBLIC_SOLANA_NETWORK as "devnet" | "mainnet-beta") || 'devnet';
+  const session = useSessionWallet();
+  const { publicKey: sessionPublicKey, sessionToken, createSession, sendTransaction }  = session;
   const [videoTag, setvideoTag] = useState("");
   const [isSenstive, setisSensitive] = useState("no");
   const [videoThumnail, setvideoThumnail] = useState();
@@ -37,6 +64,9 @@ export default function VideoMetadata({ videoFile, setVideoFile }) {
   const [trueTest, settrueTest] = useState(true);
   const [isNotCreated, setisNotCreated] = useState(false);
   const [coverCID, setcoverCID] = useState();
+
+  console.log("the live peer key", LIVEPEER_KEY);
+  console.log("the session public key", sessionPublicKey?.toBase58())
   const { uploadToIpfs, isUploading, isUploadingError } = usePinToIpfs();
   // const {postVideo} = usePostVideo()
   const selectThumbnailRef = useRef(null);
@@ -56,6 +86,10 @@ export default function VideoMetadata({ videoFile, setVideoFile }) {
     ]);
   };
 
+   console.log("is metadta uploading", isUploadingMetadata)
+   console.log("is uploading metadata error", uploadingMetadatError)
+
+   
   /*
    =========================
    UPLOD VIDEO THUMBNAIL
@@ -205,19 +239,8 @@ export default function VideoMetadata({ videoFile, setVideoFile }) {
      ===========================================
      
      */
-  /*
-     ===============================
-       CROSSBELL CONTRACT INSTACNCE
-     ==============================
-     
-     */
+  
 
-  /*
-     ======================================
-      END OF CROSSBELL CONTRACT INSTANCE
-     ======================================
-     
-     */
 
   /*
      ===============================
@@ -242,54 +265,67 @@ export default function VideoMetadata({ videoFile, setVideoFile }) {
      */
   const handleCreateNote = async () => {
     try{
-      /*===========================
-        GAS_UPLOAD_FUNCTION 
-        ==========================
-    */
+      
    console.log("the post note function is excuted")
     setisCreatingNote(true);
-   /*const result = await contract.postNote(character?.characterId, {
-      title: videoTitle,
-      content: caption,
-      tags: videoTags,
-      sources: ["xTube_v1"],
-      attachments: [
-        {
-          name: coverCID,
-          address: assets[0]?.playbackId,
-          alt: videoTitle,
-          mime_type: videoFile?.type,
+   
+    /*============================
+        handle post to blockchain
+    ============================== */
+   
+    const updatedSession = await refreshSession(session, cluster);
+
+    if (!updatedSession || !updatedSession.sessionToken || !updatedSession.publicKey || !updatedSession.signMessage || !updatedSession.sendTransaction || !profile) {
+      console.log(` profile: ${profile}`);
+      console.log("Session or profile details missing");
+      return;
+    }
+
+      
+
+    const postArray = new TextEncoder().encode(videoTitle);
+    const signature = await updatedSession.signMessage(postArray);
+    const signatureString = JSON.stringify(signature.toString());
+
+    let metadata = {
+      content: {
+        content: {
+          title : videoTitle,
+          video : assets[0]?.playbackId,
+          image : coverCID,
+          description : caption
         },
-      ],
-    });*/
+        format: "json",
+      },
+      type: "json",
+      authorship: {
+        publicKey: updatedSession.publicKey.toBase58(),
+        signature: signatureString,
+      },
+      app_id: "vito_1",
+    } as PostData;
 
-    /*===========================
-        GASLESS_UPLOAD_FUNCTION 
-        ==========================
-    */
+    const uploader = await handleUpload(metadata, updatedSession);
+    if (!uploader) {
+      console.log("Error uploading post");
+      return;
+    }
 
-    const result = await postNote.mutate({
-      metadata : {
-        title: videoTitle,
-        content: caption,
-        tags: videoTags,
-        sources: ["xTube_v1"],
-        attachments: [
-          {
-            name: coverCID,
-            address: assets[0]?.playbackId,
-            alt: videoTitle,
-            mime_type: videoFile?.type,
-          },
-        ],
-      }
-    })
+    const postResult = await createWithSession(uploader.url, profile, updatedSession.publicKey, new PublicKey(updatedSession.sessionToken), updatedSession.sendTransaction);
+    if (!postResult || !postPDA) {
+      console.log("Error creating post");
+      return;
+    }
 
-    console.log("the note results", result);
+    console.log("the note results", postResult);
 
     setisNotCreated(true);
       setisCreatingNote(false);
       toast.success("video have been created")
+
+        // tryn 
+       // metadata.metadataUri = uploader.url;
+       // metadata.transactionUrl = `https://solana.fm/tx/${postResponse}?cluster=devnet-solana`;
     } catch (error) {
       toast.error("Something went wrong when creating video")
       setisCreatingNote(false);

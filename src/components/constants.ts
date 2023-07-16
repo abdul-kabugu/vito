@@ -138,4 +138,60 @@ export const profileMenuLinks = [
       value : "Food & Cooking"
     },
    ]
+
+      
+export const tipsTires = [
+  {
+    title: "1 SOL",
+    emoji: "👍",
+    amount: 1,
+  },
+
+  {
+    title: "5 SOL",
+    emoji: "🙌",
+    amount: 5,
+  },
+  {
+    title: "10 SOL",
+    emoji: "🍺",
+    amount: 10,
+  },
+
+  {
+    title: "15 SOL",
+    emoji: "🎉",
+    amount: 15,
+  },
+  {
+    title: "20 SOL",
+    emoji: "💰",
+    amount: 20,
+  },
+
+  {
+    title: "30 SOL",
+    emoji: "🏆",
+    amount: 30,
+  },
+  {
+    title: "50 SOL",
+    emoji: "🥂",
+    amount: 50,
+  },
+  {
+    title: "70 SOL",
+    emoji: "🥇",
+    amount: 70,
+  },
+  {
+    title: "100 SOL",
+    emoji: "💎",
+    amount: 100,
+  },
+];
+
+export const sponsorPeriods = [
+  "One Time", "Weekly", "Monthly"
+]
   

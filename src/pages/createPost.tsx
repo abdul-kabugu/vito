@@ -134,7 +134,7 @@ const PostCreator = () => {
             <button>dispal key </button>
             
         </div>
-        <PostDisplay posts={posts} onReactionCreated={handleReactionCreated} />
+       <PostDisplay posts={posts} onReactionCreated={handleReactionCreated} />
       </main>
     </>
   );

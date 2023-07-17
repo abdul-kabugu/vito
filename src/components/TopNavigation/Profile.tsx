@@ -8,18 +8,39 @@ import { AiOutlineSetting } from "react-icons/ai";
 import { VscSignOut } from "react-icons/vsc";
 import { BellOutline, MoonOutline, SunOutline, UploadOutline } from "@/Icons";
 import Link from "next/link"
-import { MyProfile } from "../MyProfile";
+import  { MyProfile } from "../MyProfile";
+import { useWallet } from "@solana/wallet-adapter-react";
 import WalletMultiButtonDynamic from "../WalletMultiButtonDynamic";
+import { useInitializeProfile } from "@/hooks/useInitializeProfile";
+import { useGumContext } from "@gumhq/react-sdk";
+
 export default function Connected() {
+  const wallet = useWallet();
+  const {sdk} = useGumContext()
 
-
+  const [myProfiles, setMyProfiles] = useState([] as any); 
+  const getMyProfile = async () => {
+    if (sdk && wallet.publicKey) {
+      const myProfile = await sdk.profile.getProfilesByAuthority(wallet.publicKey) || [];
+      setMyProfiles(myProfile);
+    }
+  };
+  
+  useEffect(() => {
+   if(sdk && wallet.publicKey){
+    getMyProfile()
+   }
+  }, [sdk, wallet.publicKey])
+  
+const CURRENT_CHANNEL = myProfiles[0]?.metadata?.name
+ console.log("the initialized profile", myProfiles)
   const UserConnected = () => {
     return (
       <div className="flex items-center gap-2">
         <div className="hover:bg-gray-700 cursor-pointer h-8 w-8 flex items-center justify-center rounded-full py-0.5 px-1.5">
           <BellOutline className="w-6 h-6  rounded-full "  />
         </div>
-        <Link href={`/upload`}>
+        <Link href={`/upload`} className="text-gray-200">
           {/*<div className="flex xs:gap-1 md:gap-2 items-center bg-blue-700 text-white xs:py-1.5 md:py-2 xs:px-2 md:px-3 font-sans rounded-lg cursor-pointer xs:hidden md:flex ">*/}
             <TbVideoPlus size={26} className="xs:hidden md:block" />
              {/*<button>New video</button>
@@ -50,10 +71,12 @@ export default function Connected() {
                 {profileMenuLinks.map((link, i) => {
                   return (
                     <Menu.Item key={i}>
+                      <Link href={`/channel/${CURRENT_CHANNEL}`} className="text-gray-200">
                       <div className="flex items-center gap-2 cursor-pointer  py-2  hover:bg-gray-700 px-2 rounded-lg my-2">
                         <link.icon className="w-4 h-4 " />
                         <p className=" text-sm  capitalize ">{link.title}</p>
                       </div>
+                      </Link>
                     </Menu.Item>
                   );
                 })}

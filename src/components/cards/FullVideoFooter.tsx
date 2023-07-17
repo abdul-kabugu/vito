@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { useState, Fragment } from 'react';
 import { AiOutlineDislike, AiOutlineDollar, AiOutlineLike, AiOutlineLine, AiOutlineRetweet, AiOutlineShareAlt } from 'react-icons/ai';
 import { RiShareForward2Line, RiShareForwardLine } from 'react-icons/ri';

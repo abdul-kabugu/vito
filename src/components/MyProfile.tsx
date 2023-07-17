@@ -26,7 +26,7 @@ export function MyProfile() {
     return (
       <div>
      
-       <button>create profile</button>
+       <button className='py-1.5 px-4 rounded-lg bg-fuchsia-600'>create profile</button>
       </div>
     );
   }

@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import styles from '@/styles/Home.module.css'
 import { UserPostsDisplay } from '@/components/UserPosts'
 import { MyProfile } from '@/components/MyProfile'
@@ -18,7 +20,7 @@ function Home() {
         <link rel="icon" href="/favicon.ico" />
   </Head>
       <main className={``}>
-        <div className='flex  xs:flex-col md:flex-row flex-wrap gap-3 md:pt-3 bg-gray-800'>
+        <div className='flex  xs:flex-col md:flex-row flex-wrap gap-3 md:pt-3 bg-gray-900 min-h-screen'>
            {posts?.post?.map((video, i) => {
 
             return(

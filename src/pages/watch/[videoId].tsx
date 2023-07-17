@@ -29,7 +29,7 @@ export default function videoId({data, vidId, loading, error}) {
 <meta property="og:description" content={data?.metadata?.content?.content?.dscription} key="ogdesc" />
         </Head>
      
-    <div className='   max-w-full'>
+    <div className='   max-w-full bg-gray-900 min-h-screen'>
       <WatchMain  vidId={vidId} data={data} loading={loading} error ={error} />
     </div>
     

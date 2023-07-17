@@ -6,8 +6,10 @@ import useTruncateText from '@/hooks/useTruncateText';
 import moment from 'moment';
 import { AiOutlineFieldTime } from 'react-icons/ai';
 import Link from 'next/link';
+import useGetProfileByAddress from '@/hooks/useGetProfileByAddress';
 export default function VideoCard({video}) {
     console.log("video from its file", video)
+     const {profile, isProfileLoading, isProfileError} = useGetProfileByAddress(video?.profile)
   const {shortenTxt} = useTruncateText()
   const [currentTime, setCurrentTime] = useState(new Date());
   const currentDate = new Date();
@@ -15,6 +17,9 @@ export default function VideoCard({video}) {
   const diffInMilliseconds = currentDate - videoCreatedAt;
   const diffInHours = diffInMilliseconds / (60 * 60 * 1000);
   const duration = moment.duration(diffInHours, 'hours'); 
+
+  const CREATORT_PROFILE = profile?.profile[0]
+
   return (
     <div className='xs:w-full md:w-[340px] lg:w-[320px]'>
         <div className='md:max-h-[210px] rounded-md '>
@@ -23,10 +28,11 @@ export default function VideoCard({video}) {
        </Link>
        </div>
        <div className='flex gap-2 my-2'>
+         <Link href={`/channel/${CREATORT_PROFILE?.metadata?.name}`}>
          <div className='w-8 h-8 rounded-full flex items-center justify-center bg-gray-700' >
-             <Image  src={`https://i.imgur.com/uGv5Zca.jpg`} width={300} height={300} alt='profile' className='w-7 h-7 rounded-full'  />
+             <img  src={`${CREATORT_PROFILE?.metadata?.avatar}`}  alt='profile' className='w-7 h-7 rounded-full'  />
          </div>
-
+         </Link>
           <div>
                <h1 className='text-lg font-thin mb-0'> { video?.metadata?.content?.content?.title && shortenTxt( video?.metadata?.content?.content?.title, 30)}</h1>
                 <div className='flex gap-1 items-center '>

@@ -38,7 +38,7 @@ export default function Layout({ children }: Tlayout) {
     
         <LivepeerConfig client={client} theme={livepeerTheme}>
           <TopNav isExpanded={isSidebarExpanded} />
-          <main className="flex">
+          <main className="flex bg-black">
             <section
               className={`${
                 isSidebarExpanded ? "md:ml-[120px]" : "md:ml-[70px]"

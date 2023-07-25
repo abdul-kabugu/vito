@@ -47,6 +47,9 @@ const CURRENT_CHANNEL = myProfiles[0]?.metadata?.name
           </div>*/}
         </Link>
         <div>
+           {! wallet?.publicKey ? (
+             <WalletMultiButtonDynamic  />
+           ): (
           <Menu as="div" className="relative ">
             <Menu.Button>
               <div className="border border-gray-700 flex gap-2  items-center xs:rounded-full md:rounded-full cursor-pointer ">
@@ -109,6 +112,7 @@ const CURRENT_CHANNEL = myProfiles[0]?.metadata?.name
               </Menu.Items>
             </Transition>
           </Menu>
+  )}
         </div>
       </div>
     );

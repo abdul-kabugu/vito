@@ -12,6 +12,7 @@ import { AmplifyAlt, DislikeAlt, LikeAlt } from '../../Icons';
 import { PublicKey } from '@solana/web3.js';
 import { refreshSession } from '@/utils';
 import { toast } from 'react-toastify';
+import { tipsTires } from '../constants';
 export default function FullVideoCardFooter({ video }) {
   const [isShowShareToSocial, setisShowShareToSocial] = useState(false);
   const [isShowTipModal, setisShowTipModal] = useState(false);
@@ -21,8 +22,10 @@ export default function FullVideoCardFooter({ video }) {
   const {sdk} = useGumContext()
   const session = useSessionWallet();
   const cluster = (process.env.NEXT_PUBLIC_SOLANA_NETWORK as "devnet" | "mainnet-beta") || 'devnet';
-
-
+  const [currentStep, setcurrentStep] = useState(0)
+  const [selectedTier, setselectedTier] = useState(0)
+ const [amountToDonate, setamountToDonate] = useState(1)
+  console.log("video data fro footer", video)
   const { createReactionWithSession } = useReaction(sdk);
   const profile = useInitializeProfile();
 
@@ -112,7 +115,7 @@ export default function FullVideoCardFooter({ video }) {
                   >
                     Share
                   </Dialog.Title>
-                  <Dialog.Description className={`mt-3`}>
+                  <Dialog.Description className={`mt-3`} as='div'>
                     <ShareButtons postId={video?.address} />
                   </Dialog.Description>
                 </Dialog.Panel>
@@ -150,13 +153,31 @@ export default function FullVideoCardFooter({ video }) {
               >
                 <Dialog.Panel className="w-full border border-fuchsia-700/30  max-w-md transform overflow-hidden rounded-2xl bg-black py-2 px-4 text-left align-middle shadow-xl transition-all">
                   <Dialog.Title
-                    as="h3"
+                    as="div"
                     className="text-lg font-medium leading-6 "
                   >
-                    Support the creator
+                    
+                   Support Creator
+                      
+                    
                   </Dialog.Title>
-                  <Dialog.Description className={`mt-3`}>
-                    <TipUser video={video} />
+                  <Dialog.Description className={`mt-3`} as='div'>
+                    {/*<TipUser video={video} />*/}
+                    <div className='flex gap-4 flex-wrap justify-center my-6'> 
+                    {tipsTires.map((tip, i) => {
+                  return(
+                    <div key={i} onClick={() => setamountToDonate(tip.amount)} className={`flex ${tip.amount === amountToDonate && "border-fuchsia-800 bg-fuchsia-700 text-white"} gap-2 border border-fuchsia-900/50 py-1.5 px-4 rounded-lg cursor-pointer`}> 
+                      <p>{tip.emoji}</p>
+                      <p>{tip.title}</p>
+                    </div>
+                  )
+                })}
+                     </div>
+
+                      <div>
+                      <button className='bg-fuchsia-700 my-3 hover:bg-fuchsia-600 w-full text-white  py-1.5 px-4 rounded-md disabled:bg-fuchsia-950' onClick={() => setcurrentStep(1)} disabled={true}> Send Tip</button>
+
+                      </div>
                   </Dialog.Description>
                 </Dialog.Panel>
               </Transition.Child>

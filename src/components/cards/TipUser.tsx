@@ -11,6 +11,7 @@ export default function TipUser({video}) {
     const [amount, setamount] = useState("")
     const [balance, setBalance] = useState(null);
     const [isDonating, setisDonating] = useState(false)
+    const [currentStep, setcurrentStep] = useState(0)
  const [selectedTier, setselectedTier] = useState(0)
 const [amountToDonate, setamountToDonate] = useState(1)
 
@@ -20,14 +21,51 @@ const [amountToDonate, setamountToDonate] = useState(1)
        console.log("hellow  donate to that")
          
       }
+
+        const getCurrentStep = () => {
+          if(currentStep === 0) {
+              return(
+                <div className=' flex gap-4 flex-wrap justify-center'>
+                {tipsTires.map((tip, i) => {
+                  return(
+                    <div key={i} onClick={() => setamountToDonate(tip.amount)} className={`flex ${tip.amount === amountToDonate && "border-fuchsia-800 bg-fuchsia-700 text-white"} gap-2 border border-fuchsia-900/50 py-1.5 px-4 rounded-lg cursor-pointer`}> 
+                      <p>{tip.emoji}</p>
+                      <p>{tip.title}</p>
+                    </div>
+                  )
+                })}
+              </div>
+              )
+          } else if(currentStep === 1){
+            return(
+              <div className='flex gap-4 flex-wrap justify-center'>
+                <h1 className='text-lg'>Woow   You got badge   Tweet about it</h1>
+              </div>
+            )
+          } 
+        }
+
+        const getCurrentStateBtn = () => {
+          if(currentStep === 0) {
+            return(
+              <div className='flex items-end justify-end'>
+              <button className='bg-fuchsia-700 my-3 hover:bg-fuchsia-600 w-[100px] text-white  py-1 px-4 rounded-md' onClick={() => setcurrentStep(1)}> Next </button>
+              </div>
+
+            )
+          } else if(currentStep === 1) {
+            return(
+               <div className='flex justify-between items-center'>
+                 <button className='border border-fuchsia-500 hover:bg-fuchsia-600 text-white w-[100px] py-1 px-4 rounded-md' onClick={() => setcurrentStep(0)}> Prev </button>
+
+                  <button className='bg-fuchsia-700 my-3 hover:bg-fuchsia-600 w-[100px] text-white  py-1 px-4 rounded-md'> Tweet  </button>
+
+               </div>
+            )
+          }
+        }
   return (
     <div>
-    {/*} <div className='flex gap-2 flex-col'>
-        <h1>Amount</h1>
-        <input  value={amount} onChange={e => setamount(e.target.value)} placeholder="10 SUB" 
-          className='py-1 px-4 w-[100%] focus:outline-none border border-gray-300 mb-3 rounded-md'
-        />
-  </div>*/}
    
   <div className='flex gap-3 justify-center '>
   {/*sponsorPeriods.map((item, i) => {
@@ -40,17 +78,20 @@ const [amountToDonate, setamountToDonate] = useState(1)
   </div>
 
   <div className='flex gap-4 flex-wrap justify-center my-6'>
-    {tipsTires.map((tip, i) => {
+    {/*tipsTires.map((tip, i) => {
       return(
         <div key={i} onClick={() => setamountToDonate(tip.amount)} className={`flex ${tip.amount === amountToDonate && "border-fuchsia-800 bg-fuchsia-700 text-white"} gap-2 border border-fuchsia-900/50 py-2 px-4 rounded-lg cursor-pointer`}> 
           <p>{tip.emoji}</p>
           <p>{tip.title}</p>
         </div>
       )
-    })}
+    })*/
+      getCurrentStep()
+    }
   </div>
 
-     <button className='bg-fuchsia-700 my-3 hover:bg-fuchsia-600 text-white w-[100%] py-1.5 px-4 rounded-md' onClick={() => donate()}>{isDonating ? "Sending Tip.." : "Send Tip"} </button>
+    {/*} <button className='bg-fuchsia-700 my-3 hover:bg-fuchsia-600 text-white w-[100%] py-1.5 px-4 rounded-md' onClick={() => donate()}>{isDonating ? "Sending Tip.." : "Send Tip"} </button>*/}
+     {getCurrentStateBtn()}
     </div>
   )
 }

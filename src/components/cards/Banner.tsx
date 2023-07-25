@@ -34,11 +34,11 @@ export default function Banner({data, loading, error}) {
          </div>
           <div>
             <h1 className=' mb-1 xs:text-lg  font-semibold xl:text-2xl capitalize'>{data?.metadata?.name}</h1>
-            <h2 className='text-gray-400 md:font-semibold text-sm mt-0'> Subscribers 2</h2>
+            <h2 className='text-gray-400 md:font-semibold text-sm mt-0'> Followrs 2</h2>
           </div>
 
         </div>
-        <button className='md:font-semibold bg-fuchsia-600 text-white xs:py-1 md:py-1.5 rounded-lg xs:px-2 md:px-3'>Subscribe</button>
+        <button className='md:font-semibold bg-fuchsia-600 text-white xs:py-1 md:py-1.5 rounded-lg xs:px-2 md:px-3'>Follow</button>
 
       </div>
     </div>

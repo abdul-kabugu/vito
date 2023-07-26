@@ -11,6 +11,8 @@ import { GumUIProvider } from '@gumhq/ui-components'
 import Layout from '@/components/Layout'
 import { apolloClient } from '@/graphql/appoloClient'
 import { ApolloProvider } from '@apollo/client/react'
+
+
 dotenv.config()
 // Use require instead of import since order matters
 require('@solana/wallet-adapter-react-ui/styles.css');
@@ -31,6 +33,8 @@ export default function App({ Component, pageProps }: AppProps) {
       <GumSDKProvider> 
         <GumUIProvider>
           <ApolloProvider client={apolloClient}>
+      
+
            <Layout>
           <Component {...pageProps} />
           </Layout>

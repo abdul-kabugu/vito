@@ -15,7 +15,7 @@ export default function TopNav() {
      <div className='flex gap-4 items-center'>
       <AiOutlineMenu size={23} className='cursor-pointer xs:hidden md:block' onClick={toggleSidebar} />
        <div>
-        <p>nice logo</p>
+       
         <AppLogo className='w-7 text-blue-500 ' />
         </div> 
      
